@@ -17,9 +17,6 @@ export async function GET(
 ) {
   try {
     const shareToken = params.id;
-    console.log(
-      `Fetching comments for shared report with token: ${shareToken}`
-    );
 
     // First, find the report by share token
     const report = await prisma.report.findFirst({
@@ -35,20 +32,14 @@ export async function GET(
     });
 
     if (!report) {
-      console.log(`No report found with shareToken: ${shareToken}`);
       return new NextResponse(
         JSON.stringify({ error: "Shared report not found" }),
         { status: 404, headers: { "Content-Type": "application/json" } }
       );
     }
 
-    console.log(
-      `Found report with ID: ${report.id}, public: ${report.isPublic}`
-    );
-
     // Check if the report is public
     if (!report.isPublic) {
-      console.log(`Report ${report.id} is not public`);
       return new NextResponse(
         JSON.stringify({ error: "Report is not public" }),
         { status: 403, headers: { "Content-Type": "application/json" } }
@@ -60,14 +51,11 @@ export async function GET(
       allowComments: false,
     };
     if (!shareSettings.allowComments) {
-      console.log(`Comments are disabled for report ${report.id}`);
       return new NextResponse(
         JSON.stringify({ error: "Comments are disabled for this report" }),
         { status: 403, headers: { "Content-Type": "application/json" } }
       );
     }
-
-    console.log(`Fetching comments for report ID: ${report.id}`);
 
     // Fetch comments
     const comments = await prisma.comment.findMany({
@@ -84,8 +72,6 @@ export async function GET(
         },
       },
     });
-
-    console.log(`Found ${comments.length} comments for report ${report.id}`);
 
     return NextResponse.json(comments);
   } catch (error) {
@@ -106,12 +92,7 @@ export async function POST(
     const session = await getServerSession(authOptions);
     const shareToken = params.id;
 
-    console.log(
-      `Attempting to add comment to shared report with token: ${shareToken}`
-    );
-
     if (!session?.user?.email) {
-      console.log("User not authenticated");
       return new NextResponse(JSON.stringify({ error: "Unauthorized" }), {
         status: 401,
         headers: { "Content-Type": "application/json" },
@@ -134,14 +115,11 @@ export async function POST(
     });
 
     if (!user) {
-      console.log(`User with email ${session.user.email} not found`);
       return new NextResponse(JSON.stringify({ error: "User not found" }), {
         status: 404,
         headers: { "Content-Type": "application/json" },
       });
     }
-
-    console.log(`User found: ${user.id}`);
 
     // Find the report by share token
     const report = await prisma.report.findFirst({
@@ -157,20 +135,14 @@ export async function POST(
     });
 
     if (!report) {
-      console.log(`No report found with shareToken: ${shareToken}`);
       return new NextResponse(
         JSON.stringify({ error: "Shared report not found" }),
         { status: 404, headers: { "Content-Type": "application/json" } }
       );
     }
 
-    console.log(
-      `Found report with ID: ${report.id}, public: ${report.isPublic}`
-    );
-
     // Check if the report is public
     if (!report.isPublic) {
-      console.log(`Report ${report.id} is not public`);
       return new NextResponse(
         JSON.stringify({ error: "Report is not public" }),
         { status: 403, headers: { "Content-Type": "application/json" } }
@@ -183,16 +155,11 @@ export async function POST(
 
     // Check if comments are allowed
     if (!shareSettings.allowComments) {
-      console.log(`Comments are disabled for report ${report.id}`);
       return new NextResponse(
         JSON.stringify({ error: "Comments are disabled for this report" }),
         { status: 403, headers: { "Content-Type": "application/json" } }
       );
     }
-
-    console.log(
-      `Creating comment for report ID: ${report.id} by user: ${user.id}`
-    );
 
     // Create the comment
     const comment = await prisma.comment.create({
@@ -212,8 +179,6 @@ export async function POST(
         },
       },
     });
-
-    console.log(`Comment created with ID: ${comment.id}`);
 
     return NextResponse.json(comment);
   } catch (error) {

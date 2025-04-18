@@ -112,13 +112,7 @@ export default function CommentSection({
           ? `/api/reports/share/${reportId}/comments`
           : `/api/reports/${reportId}/comments`;
 
-        console.log(`Fetching comments from: ${endpoint}`, {
-          reportId,
-          isSharedReport,
-        });
-
         const response = await fetch(endpoint);
-        console.log(`Response status: ${response.status}`);
 
         if (!response.ok) {
           if (response.status === 403) {
@@ -134,7 +128,9 @@ export default function CommentSection({
           const errorData = await response
             .json()
             .catch(() => ({ error: "Failed to fetch comments" }));
-          console.error("Error response:", errorData);
+          if (process.env.NODE_ENV === "development") {
+            console.error("Error response:", errorData);
+          }
           throw new Error(errorData.error || "Failed to fetch comments");
         }
 
@@ -152,7 +148,9 @@ export default function CommentSection({
           setCommentCount(visibleComments.length);
         }
       } catch (err) {
-        console.error("Error fetching comments:", err);
+        if (process.env.NODE_ENV === "development") {
+          console.error("Error fetching comments:", err);
+        }
         setError("Failed to load comments. Please try again.");
         notifyComment({
           message: "Failed to load comments",

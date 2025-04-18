@@ -28,6 +28,7 @@ import {
   X,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { toast } from "@/components/ui/use-toast";
 
 interface NotificationDropdownProps {
   isOpen: boolean;
@@ -304,9 +305,11 @@ export function NotificationDropdown({
                         onClick={(e) => {
                           e.stopPropagation();
                           if (notification.read) {
-                            console.log(
-                              "Mark as unread functionality not implemented"
-                            );
+                            toast({
+                              title: "Coming Soon",
+                              description:
+                                "Mark as unread functionality will be available soon",
+                            });
                           } else {
                             markAsRead(notification.id);
                           }

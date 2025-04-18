@@ -73,12 +73,6 @@ export async function GET(
       },
     };
 
-    console.log("API Response:", {
-      session: session?.user?.email,
-      reportAuthorId: report.authorId,
-      formattedReport,
-    });
-
     return NextResponse.json(formattedReport);
   } catch (error) {
     console.error("Error fetching report:", error);
