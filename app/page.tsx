@@ -79,18 +79,12 @@ export default function Home() {
 
                 <div className="flex items-center gap-4">
                   <div className="flex -space-x-2">
-                    {[1, 2, 3, 4].map((i) => (
-                      <div
-                        key={i}
-                        className="w-8 h-8 rounded-full ring-2 ring-white dark:ring-slate-900 overflow-hidden bg-slate-200 dark:bg-slate-700 flex items-center justify-center text-xs font-medium"
-                      />
-                    ))}
+                    <Clock className="w-4 h-4 text-green-500" />
                   </div>
                   <div className="text-sm text-slate-600 dark:text-slate-400">
                     <span className="font-medium text-slate-900 dark:text-white">
-                      5,000+
+                      5 minute reports, not 5 hour reports
                     </span>{" "}
-                    professionals trust Blitzly
                   </div>
                 </div>
               </div>
